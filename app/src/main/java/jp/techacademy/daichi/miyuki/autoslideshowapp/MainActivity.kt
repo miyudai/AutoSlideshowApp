@@ -34,14 +34,19 @@ class MainActivity : AppCompatActivity() {
         )
 
         if (cursor!!.moveToFirst()) {
-                // indexからIDを取得し、そのIDから画像のURIを取得する
-                val fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
-                val id = cursor.getLong(fieldIndex)
-                val imageUri =
-                    ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+            // indexからIDを取得し、そのIDから画像のURIを取得する
+            val fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
+            val id = cursor.getLong(fieldIndex)
+            val imageUri =
+                ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
-                imageView.setImageURI(imageUri)
+            imageView.setImageURI(imageUri)
 
+        }else{
+            textView.text = "画像が見つかりませんでした"
+            go_button.isEnabled = false
+            back_button.isEnabled = false
+            start_button.isEnabled=false
         }
 
         //押したら画像が進むボタン
@@ -50,14 +55,16 @@ class MainActivity : AppCompatActivity() {
             if (cursor!!.moveToNext()) {
                 val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
                 val id = cursor!!.getLong(fieldIndex)
-                val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                val imageUri =
+                    ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
                 imageView.setImageURI(imageUri)
-            }
-            else{cursor!!.moveToFirst()
+            } else {
+                cursor!!.moveToFirst()
                 val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
                 val id = cursor!!.getLong(fieldIndex)
-                val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                val imageUri =
+                    ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
                 imageView.setImageURI(imageUri)
             }
@@ -69,16 +76,16 @@ class MainActivity : AppCompatActivity() {
             if (cursor!!.moveToPrevious()) {
                 val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
                 val id = cursor!!.getLong(fieldIndex)
-                val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                val imageUri =
+                    ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
                 imageView.setImageURI(imageUri)
-            }
-
-            else {
+            } else {
                 cursor!!.moveToLast()
                 val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
                 val id = cursor!!.getLong(fieldIndex)
-                val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                val imageUri =
+                    ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
                 imageView.setImageURI(imageUri)
             }
@@ -86,52 +93,60 @@ class MainActivity : AppCompatActivity() {
         //再生で2秒の自動送り、もっかい押すと停止する
         start_button.setOnClickListener {
 
-            if (mTimer == null){
+            if (mTimer == null) {
                 start_button.text = "停止"
-                go_button.isEnabled  = false
-                back_button.isEnabled  = false
+                go_button.isEnabled = false
+                back_button.isEnabled = false
                 mTimer = Timer()
 
                 mTimer!!.schedule(object : TimerTask() {
                     override fun run() {
                         mHandler.post {
 
-                                if(cursor!!.moveToNext()) {
-                                    val fieldIndex =
-                                        cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
-                                    val id = cursor!!.getLong(fieldIndex)
-                                    val imageUri = ContentUris.withAppendedId(
-                                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                        id
-                                    )
+                            if (cursor!!.moveToNext()) {
+                                val fieldIndex =
+                                    cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+                                val id = cursor!!.getLong(fieldIndex)
+                                val imageUri = ContentUris.withAppendedId(
+                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                    id
+                                )
 
-                                    imageView.setImageURI(imageUri)
-                                }else {
-                                    cursor!!.moveToFirst()
-                                    val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
-                                    val id = cursor!!.getLong(fieldIndex)
-                                    val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                                imageView.setImageURI(imageUri)
+                            } else {
+                                cursor!!.moveToFirst()
+                                val fieldIndex =
+                                    cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+                                val id = cursor!!.getLong(fieldIndex)
+                                val imageUri = ContentUris.withAppendedId(
+                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                    id
+                                )
 
-                                    imageView.setImageURI(imageUri)
-                                }
+                                imageView.setImageURI(imageUri)
+                            }
                         }
-            }
-            }, 2000, 2000)
-        }else{
+                    }
+                }, 2000, 2000)
+            } else {
                 start_button.text = "再生"
-                go_button.isEnabled  = true
-                back_button.isEnabled  = true
-                if (mTimer != null){
+                go_button.isEnabled = true
+                back_button.isEnabled = true
+                if (mTimer != null) {
                     mTimer!!.cancel()
                     mTimer = null
                 }
             }
-            }
+        }
 
 
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             PERMISSIONS_REQUEST_CODE ->
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -146,6 +161,7 @@ class MainActivity : AppCompatActivity() {
                 }
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -169,11 +185,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             getContentsInfo()
         }
-
-
-
-
-
 
 
     }
