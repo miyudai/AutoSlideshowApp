@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
                 imageView.setImageURI(imageUri)
             }
-            else(cursor!!.moveToFirst()) {
+            else{cursor!!.moveToFirst()
                 val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
                 val id = cursor!!.getLong(fieldIndex)
                 val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
@@ -74,7 +74,8 @@ class MainActivity : AppCompatActivity() {
                 imageView.setImageURI(imageUri)
             }
 
-            else(cursor!!.moveToLast()) {
+            else {
+                cursor!!.moveToLast()
                 val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
                 val id = cursor!!.getLong(fieldIndex)
                 val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
@@ -105,7 +106,8 @@ class MainActivity : AppCompatActivity() {
                                     )
 
                                     imageView.setImageURI(imageUri)
-                                }else(cursor!!.moveToFirst()) {
+                                }else {
+                                    cursor!!.moveToFirst()
                                     val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
                                     val id = cursor!!.getLong(fieldIndex)
                                     val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
@@ -134,11 +136,16 @@ class MainActivity : AppCompatActivity() {
             PERMISSIONS_REQUEST_CODE ->
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getContentsInfo()
-                }
+                } else {
+                    // 許可ダイアログを表示するようにする
+                    requestPermissions(
+                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                        PERMISSIONS_REQUEST_CODE
+                    )
 
+                }
         }
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -174,9 +181,6 @@ class MainActivity : AppCompatActivity() {
 
 }
 
-private operator fun <T> Comparable<T>.invoke(function: () -> Unit) {
-
-}
 
 
 
