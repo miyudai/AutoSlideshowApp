@@ -18,7 +18,6 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private val PERMISSIONS_REQUEST_CODE = 100
-    private var cursor: Cursor? = null
     private var mTimer: Timer? = null
     private var mHandler = Handler()
 
